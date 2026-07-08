@@ -1602,19 +1602,12 @@
             '</div>' +
           '</div>';
         }
-        var lockHtml = '';
-        var vipHtml = '';
         var clickAttr = '';
         var isLocked = tpl.locked && !isVip;
         if (!isLocked) {
           clickAttr = ' onclick="window._tplCardClick(\'' + tpl.name + '\')"';
-        }
-        if (tpl.vip) {
-          vipHtml = '<span class="vip-badge">VIP</span>';
-          if (isLocked) {
-            lockHtml = '<div class="lock-overlay"><span class="lock-icon">🔒</span></div>';
-            clickAttr = ' onclick="window._lockedTplClick(\'' + tpl.name + '\')" data-locked="1"';
-          }
+        } else {
+          clickAttr = ' onclick="window._lockedTplClick(\'' + tpl.name + '\')" data-locked="1"';
         }
         var colors = {
           tall: 'background:linear-gradient(135deg,#c7d2fe,#a5b4fc)',
@@ -1624,7 +1617,6 @@
         return '<div class="tpl-card"' + clickAttr + '>' +
           '<div class="thumb"><div class="thumb-inner ' + tpl.h + '" style="' + colors[tpl.h] + '">' +
             '<span style="font-size:36px;">' + tpl.emoji + '</span>' +
-            vipHtml + lockHtml +
           '</div></div>' +
           '<div class="tpl-name">' + tpl.name + '</div>' +
         '</div>';
