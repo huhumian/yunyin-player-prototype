@@ -1562,8 +1562,8 @@
       ];
 
       function buildCard(tpl, index) {
-        // Every 4th item (0-indexed: 3,7,11...) is an ad
-        if (index > 0 && index % 4 === 3) {
+        // Every 4th item (0-indexed: 3,7,11...) is an ad (hidden for VIP)
+        if (!isVip && index > 0 && index % 4 === 3) {
           return '<div class="tpl-card ad-card">' +
             '<div class="ad-content">' +
               '<span class="ad-tag">广告</span>' +
@@ -1575,12 +1575,13 @@
         var lockHtml = '';
         var vipHtml = '';
         var clickAttr = '';
-        if (!tpl.locked) {
+        var isLocked = tpl.locked && !isVip;
+        if (!isLocked) {
           clickAttr = ' onclick="window._tplCardClick(\'' + tpl.name + '\')"';
         }
         if (tpl.vip) {
           vipHtml = '<span class="vip-badge">VIP</span>';
-          if (tpl.locked) {
+          if (isLocked) {
             lockHtml = '<div class="lock-overlay"><span class="lock-icon">🔒</span></div>';
             clickAttr = ' onclick="window._lockedTplClick(\'' + tpl.name + '\')" data-locked="1"';
           }
@@ -1752,6 +1753,10 @@
         var toggle = document.getElementById('toggle-vip');
         toggle.classList.toggle('on', isVip);
         showToast(isVip ? '已开启VIP状态' : '已关闭VIP状态');
+        // Re-render all waterfalls to reflect VIP state (ads hidden, templates unlocked)
+        renderWaterfall('home-waterfall', videoTemplates.slice(0, 6));
+        renderWaterfall('video-waterfall', videoTemplates);
+        renderWaterfall('photo-waterfall', photoTemplates);
       };
 
       // ===== Current viewing template =====
