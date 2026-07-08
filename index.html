@@ -1776,13 +1776,7 @@
 
         // Populate detail page
         document.getElementById('detail-preview-icon').textContent = tpl.emoji;
-        document.getElementById('detail-tpl-name').textContent = tpl.name;
         document.getElementById('detail-sub-title').textContent = tpl.name;
-
-        var tagsHtml = '<span class="tpl-detail-tag">🎬 ' + (currentViewType === 'video' ? '视频' : '写真') + '</span>';
-        if (tpl.vip) tagsHtml += '<span class="tpl-detail-tag vip-tag">👑 VIP</span>';
-        tagsHtml += '<span class="tpl-detail-tag">💎 ' + tpl.points + ' 积分</span>';
-        document.getElementById('detail-tpl-tags').innerHTML = tagsHtml;
 
         // Update "添加到" button text
         var addBtn = document.getElementById('detail-add-btn');
