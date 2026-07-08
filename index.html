@@ -1667,19 +1667,12 @@
             '</div>' +
           '</div>';
         }
-        var clickAttr = '';
-        var isLocked = tpl.locked && !isVip;
-        if (!isLocked) {
-          clickAttr = ' onclick="window._tplCardClick(\'' + tpl.name + '\')"';
-        } else {
-          clickAttr = ' onclick="window._lockedTplClick(\'' + tpl.name + '\')" data-locked="1"';
-        }
         var colors = {
           tall: 'background:linear-gradient(135deg,#c7d2fe,#a5b4fc)',
           short: 'background:linear-gradient(135deg,#ddd6fe,#c4b5fd)',
           medium: 'background:linear-gradient(135deg,#bfdbfe,#93c5fd)'
         };
-        return '<div class="tpl-card"' + clickAttr + '>' +
+        return '<div class="tpl-card" onclick="window._tplCardClick(\'' + tpl.name + '\')">' +
           '<div class="thumb"><div class="thumb-inner ' + tpl.h + '" style="' + colors[tpl.h] + '">' +
             '<span style="font-size:36px;">' + tpl.emoji + '</span>' +
           '</div></div>' +
