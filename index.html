@@ -1792,8 +1792,8 @@
         var addBtn = document.getElementById('detail-add-btn');
         addBtn.textContent = currentViewType === 'video' ? '添加到私密视频' : '添加到私密相册';
 
-        // Update "一键做同款" button text with points
-        document.getElementById('detail-make-btn').textContent = '一键做同款（' + tpl.points + '积分）';
+        // Update "一键做同款" button text
+        document.getElementById('detail-make-btn').textContent = '一键做同款';
 
         // Reset add click count for this template
         if (!addClickCount[tplName]) addClickCount[tplName] = 0;
