@@ -1491,31 +1491,16 @@
           <div class="tpl-detail-preview video-preview" id="detail-video-area" style="display:none;">
             <span class="preview-icon" id="detail-preview-icon">🎬</span>
             <div class="preview-play" id="detail-play-btn" onclick="onDetailPlayClick()"></div>
-            <!-- Lock overlay -->
-            <div class="detail-lock-overlay" id="detail-video-lock" onclick="onDetailUnlockClick()" style="display:none;">
-              <span class="lock-icon-big">🔒</span>
-              <span class="lock-hint">该模版需要解锁后查看</span>
-              <span class="lock-sub-hint">观看激励视频即可解锁</span>
-              <span class="lock-ad-countdown" id="detail-video-countdown"></span>
-            </div>
           </div>
           <!-- Photo gallery (shown for photo templates) -->
           <div id="detail-photo-area" style="display:none;">
             <div class="detail-image-main" id="detail-image-main">
               <span class="preview-icon" id="detail-photo-icon">📸</span>
-              <!-- Lock overlay for main image -->
-              <div class="detail-lock-overlay" id="detail-photo-lock" onclick="onDetailUnlockClick()" style="display:none;">
-                <span class="lock-icon-big">🔒</span>
-                <span class="lock-hint">该模版需要解锁后查看</span>
-                <span class="lock-sub-hint">观看激励视频即可解锁</span>
-                <span class="lock-ad-countdown" id="detail-photo-countdown"></span>
-              </div>
             </div>
             <div class="detail-thumb-bar" id="detail-thumb-bar"></div>
           </div>
         </div>
         <div class="tpl-detail-bottom" id="detail-bottom-bar">
-          <button class="btn-add-private" id="detail-add-btn" onclick="onAddToPrivate()">添加到私密视频</button>
           <button class="btn-make-same" id="detail-make-btn" onclick="onMakeSame()">一键做同款</button>
         </div>
       </div>
@@ -1895,17 +1880,14 @@
           document.getElementById('detail-photo-area').style.display = 'none';
           document.getElementById('detail-preview-icon').textContent = tpl.emoji;
 
-          // Lock state
-          var videoLock = document.getElementById('detail-video-lock');
+          // Play button always visible; if locked, click triggers unlock
           var playBtn = document.getElementById('detail-play-btn');
+          playBtn.style.display = 'flex';
           if (isLocked) {
-            videoLock.style.display = 'flex';
-            videoLock.querySelector('.lock-ad-countdown').textContent = '点击解锁';
-            playBtn.style.display = 'none';
-            startDetailCountdown('detail-video-countdown', function() { onDetailUnlockClick(); });
+            // 3s countdown auto-unlock
+            startDetailCountdown(function() { onDetailUnlockClick(); });
           } else {
-            videoLock.style.display = 'none';
-            playBtn.style.display = 'flex';
+            if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
           }
         } else {
           // Show photo gallery, hide video preview
@@ -1913,7 +1895,7 @@
           document.getElementById('detail-photo-area').style.display = 'block';
           document.getElementById('detail-photo-icon').textContent = tpl.emoji;
 
-          // Generate 6 thumbnails
+          // Generate 6 thumbnails: first 2 unlocked, rest locked if template is locked
           var thumbBar = document.getElementById('detail-thumb-bar');
           var thumbColors = [
             'linear-gradient(135deg,#fed7aa,#fdba74)',
@@ -1934,20 +1916,10 @@
           }
           thumbBar.innerHTML = thumbHtml;
 
-          // Lock main image if locked
-          var photoLock = document.getElementById('detail-photo-lock');
-          if (isLocked) {
-            photoLock.style.display = 'flex';
-            photoLock.querySelector('.lock-ad-countdown').textContent = '点击解锁';
-            startDetailCountdown('detail-photo-countdown', function() { onDetailUnlockClick(); });
-          } else {
-            photoLock.style.display = 'none';
-          }
+          if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
         }
 
-        // Bottom buttons
-        var addBtn = document.getElementById('detail-add-btn');
-        addBtn.textContent = currentViewType === 'video' ? '添加到私密视频' : '添加到私密相册';
+        // Bottom button
         var makeBtn = document.getElementById('detail-make-btn');
         if (!isLocked) {
           makeBtn.textContent = tpl.points + '积分一键做同款';
@@ -1956,8 +1928,6 @@
           makeBtn.style.display = 'none';
         }
 
-        // Reset add click count
-        if (!addClickCount[tplName]) addClickCount[tplName] = 0;
         uploadMaterials = [];
         document.getElementById('create-materials').innerHTML = '';
         document.getElementById('create-upload-hint').textContent = '请上传图片或视频素材';
@@ -1969,26 +1939,28 @@
 
       // Detail page countdown
       var detailCountdownTimer = null;
-      window.startDetailCountdown = function(elId, cb) {
+      window.startDetailCountdown = function(cb) {
         if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
-        var el = document.getElementById(elId);
         var count = 3;
-        el.textContent = count + 's后自动解锁';
         detailCountdownTimer = setInterval(function() {
           count--;
           if (count <= 0) {
             clearInterval(detailCountdownTimer);
             detailCountdownTimer = null;
-            el.textContent = '解锁中...';
             cb();
-          } else {
-            el.textContent = count + 's后自动解锁';
           }
         }, 1000);
       };
 
       window.onDetailPlayClick = function() {
-        showToast('播放视频预览');
+        if (!currentViewTpl) return;
+        var isLocked = currentViewTpl.locked && !isVip;
+        if (isLocked) {
+          if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
+          onDetailUnlockClick();
+        } else {
+          showToast('播放视频预览');
+        }
       };
 
       window.onDetailUnlockClick = function() {
@@ -2059,12 +2031,8 @@
         // Check points
         if (totalPoints < currentViewTpl.points) {
           closeSubPage('tpl-detail');
-          if (isVip) {
-            openSubPage('points');
-            showToast('积分不足，请充值积分');
-          } else {
-            showToast('跳转到会员开通页面');
-          }
+          openSubPage('points');
+          showToast('积分不足，请充值积分');
           return;
         }
         // Go to create page
