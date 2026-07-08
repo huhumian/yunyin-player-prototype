@@ -1018,13 +1018,15 @@
 /* ===== Template Detail Page ===== */
 .tpl-detail-preview {
   width: 100%;
-  aspect-ratio: 9/16;
   background: linear-gradient(135deg, #1f2937, #374151);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+.tpl-detail-preview.video-preview {
+  aspect-ratio: 9/16;
 }
 .tpl-detail-preview .preview-icon {
   font-size: 80px;
@@ -1040,6 +1042,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 2;
 }
 .tpl-detail-preview .preview-play::after {
   content: '';
@@ -1050,45 +1053,103 @@
   border-bottom: 11px solid transparent;
   margin-left: 4px;
 }
-.tpl-detail-info {
-  padding: 16px;
+/* Lock overlay for detail page */
+.detail-lock-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 3;
+  cursor: pointer;
 }
-.tpl-detail-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
+.detail-lock-overlay .lock-icon-big {
+  font-size: 40px;
 }
-.tpl-detail-tags {
+.detail-lock-overlay .lock-hint {
+  font-size: 14px;
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+  padding: 0 20px;
+}
+.detail-lock-overlay .lock-sub-hint {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+.detail-lock-overlay .lock-ad-countdown {
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  padding: 6px 16px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 20px;
+  margin-top: 4px;
+}
+/* Image gallery for photo templates */
+.detail-image-main {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, #1f2937, #374151);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.detail-image-main .preview-icon {
+  font-size: 80px;
+  filter: grayscale(0.3);
+}
+.detail-thumb-bar {
   display: flex;
   gap: 6px;
-  margin-top: 8px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
-.tpl-detail-tag {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background: var(--brand-bg);
-  color: var(--brand);
-  font-weight: 600;
+.detail-thumb-bar::-webkit-scrollbar { display: none; }
+.detail-thumb-item {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
 }
-.tpl-detail-tag.vip-tag {
-  background: var(--vip-bg);
-  color: var(--vip-gold);
+.detail-thumb-item.active {
+  border-color: var(--brand);
 }
+.detail-thumb-item .thumb-emoji {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+}
+.detail-thumb-item .thumb-lock {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  z-index: 1;
+}
+/* Detail bottom */
 .tpl-detail-bottom {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   padding: 12px 16px;
   background: var(--card);
   border-top: 1px solid var(--border);
-  display: flex;
-  gap: 10px;
 }
 .tpl-detail-bottom .btn-add-private {
-  flex: 1;
-  padding: 14px;
+  width: 100%;
+  padding: 13px;
   border-radius: 12px;
   border: 2px solid var(--brand);
   background: #fff;
@@ -1096,14 +1157,14 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s;
+  margin-bottom: 10px;
 }
 .tpl-detail-bottom .btn-add-private:active {
   background: var(--brand-bg);
 }
 .tpl-detail-bottom .btn-make-same {
-  flex: 1;
-  padding: 14px;
+  width: 100%;
+  padding: 13px;
   border-radius: 12px;
   border: none;
   background: linear-gradient(135deg, var(--brand), var(--brand-light));
@@ -1111,11 +1172,8 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: opacity 0.15s;
 }
-.tpl-detail-bottom .btn-make-same:active {
-  opacity: 0.85;
-}
+.tpl-detail-bottom .btn-make-same:active { opacity: 0.85; }
 
 /* ===== Create Page (素材上传制作同款) ===== */
 .create-upload-area {
@@ -1428,13 +1486,35 @@
           <span class="back-btn" onclick="closeSubPage('tpl-detail')">‹</span>
           <span class="sub-title" id="detail-sub-title">模版详情</span>
         </div>
-        <div style="overflow-y:auto;height:calc(100% - 46px - 70px);">
-          <div class="tpl-detail-preview">
+        <div style="overflow-y:auto;height:calc(100% - 46px - 130px);">
+          <!-- Video preview (shown for video templates) -->
+          <div class="tpl-detail-preview video-preview" id="detail-video-area" style="display:none;">
             <span class="preview-icon" id="detail-preview-icon">🎬</span>
-            <div class="preview-play"></div>
+            <div class="preview-play" id="detail-play-btn" onclick="onDetailPlayClick()"></div>
+            <!-- Lock overlay -->
+            <div class="detail-lock-overlay" id="detail-video-lock" onclick="onDetailUnlockClick()" style="display:none;">
+              <span class="lock-icon-big">🔒</span>
+              <span class="lock-hint">该模版需要解锁后查看</span>
+              <span class="lock-sub-hint">观看激励视频即可解锁</span>
+              <span class="lock-ad-countdown" id="detail-video-countdown"></span>
+            </div>
+          </div>
+          <!-- Photo gallery (shown for photo templates) -->
+          <div id="detail-photo-area" style="display:none;">
+            <div class="detail-image-main" id="detail-image-main">
+              <span class="preview-icon" id="detail-photo-icon">📸</span>
+              <!-- Lock overlay for main image -->
+              <div class="detail-lock-overlay" id="detail-photo-lock" onclick="onDetailUnlockClick()" style="display:none;">
+                <span class="lock-icon-big">🔒</span>
+                <span class="lock-hint">该模版需要解锁后查看</span>
+                <span class="lock-sub-hint">观看激励视频即可解锁</span>
+                <span class="lock-ad-countdown" id="detail-photo-countdown"></span>
+              </div>
+            </div>
+            <div class="detail-thumb-bar" id="detail-thumb-bar"></div>
           </div>
         </div>
-        <div class="tpl-detail-bottom">
+        <div class="tpl-detail-bottom" id="detail-bottom-bar">
           <button class="btn-add-private" id="detail-add-btn" onclick="onAddToPrivate()">添加到私密视频</button>
           <button class="btn-make-same" id="detail-make-btn" onclick="onMakeSame()">一键做同款</button>
         </div>
@@ -1804,20 +1884,80 @@
         if (!tpl) return;
         currentViewTpl = tpl;
 
-        // Populate detail page
-        document.getElementById('detail-preview-icon').textContent = tpl.emoji;
+        // Header title
         document.getElementById('detail-sub-title').textContent = tpl.name;
 
-        // Update "添加到" button text
+        var isLocked = tpl.locked && !isVip;
+
+        if (currentViewType === 'video') {
+          // Show video preview, hide photo gallery
+          document.getElementById('detail-video-area').style.display = 'flex';
+          document.getElementById('detail-photo-area').style.display = 'none';
+          document.getElementById('detail-preview-icon').textContent = tpl.emoji;
+
+          // Lock state
+          var videoLock = document.getElementById('detail-video-lock');
+          var playBtn = document.getElementById('detail-play-btn');
+          if (isLocked) {
+            videoLock.style.display = 'flex';
+            videoLock.querySelector('.lock-ad-countdown').textContent = '点击解锁';
+            playBtn.style.display = 'none';
+            startDetailCountdown('detail-video-countdown', function() { onDetailUnlockClick(); });
+          } else {
+            videoLock.style.display = 'none';
+            playBtn.style.display = 'flex';
+          }
+        } else {
+          // Show photo gallery, hide video preview
+          document.getElementById('detail-video-area').style.display = 'none';
+          document.getElementById('detail-photo-area').style.display = 'block';
+          document.getElementById('detail-photo-icon').textContent = tpl.emoji;
+
+          // Generate 6 thumbnails
+          var thumbBar = document.getElementById('detail-thumb-bar');
+          var thumbColors = [
+            'linear-gradient(135deg,#fed7aa,#fdba74)',
+            'linear-gradient(135deg,#ddd6fe,#c4b5fd)',
+            'linear-gradient(135deg,#bbf7d0,#86efac)',
+            'linear-gradient(135deg,#bfdbfe,#93c5fd)',
+            'linear-gradient(135deg,#fbcfe8,#f9a8d4)',
+            'linear-gradient(135deg,#e5e7eb,#d1d5db)'
+          ];
+          var thumbHtml = '';
+          for (var t = 0; t < 6; t++) {
+            var thumbLocked = isLocked && t >= 2;
+            thumbHtml += '<div class="detail-thumb-item' + (t === 0 ? ' active' : '') + '" style="background:' + thumbColors[t] + ';" ' +
+              (thumbLocked ? 'onclick="onThumbUnlockClick(event)"' : 'onclick="switchDetailThumb(' + t + ',this)"') + '>' +
+              '<span class="thumb-emoji">' + tpl.emoji + '</span>' +
+              (thumbLocked ? '<div class="thumb-lock">🔒</div>' : '') +
+            '</div>';
+          }
+          thumbBar.innerHTML = thumbHtml;
+
+          // Lock main image if locked
+          var photoLock = document.getElementById('detail-photo-lock');
+          if (isLocked) {
+            photoLock.style.display = 'flex';
+            photoLock.querySelector('.lock-ad-countdown').textContent = '点击解锁';
+            startDetailCountdown('detail-photo-countdown', function() { onDetailUnlockClick(); });
+          } else {
+            photoLock.style.display = 'none';
+          }
+        }
+
+        // Bottom buttons
         var addBtn = document.getElementById('detail-add-btn');
         addBtn.textContent = currentViewType === 'video' ? '添加到私密视频' : '添加到私密相册';
+        var makeBtn = document.getElementById('detail-make-btn');
+        if (!isLocked) {
+          makeBtn.textContent = tpl.points + '积分一键做同款';
+          makeBtn.style.display = 'block';
+        } else {
+          makeBtn.style.display = 'none';
+        }
 
-        // Update "一键做同款" button text
-        document.getElementById('detail-make-btn').textContent = '一键做同款';
-
-        // Reset add click count for this template
+        // Reset add click count
         if (!addClickCount[tplName]) addClickCount[tplName] = 0;
-
         uploadMaterials = [];
         document.getElementById('create-materials').innerHTML = '';
         document.getElementById('create-upload-hint').textContent = '请上传图片或视频素材';
@@ -1825,6 +1965,64 @@
         createBtn.className = 'create-make-btn';
 
         openSubPage('tpl-detail');
+      };
+
+      // Detail page countdown
+      var detailCountdownTimer = null;
+      window.startDetailCountdown = function(elId, cb) {
+        if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
+        var el = document.getElementById(elId);
+        var count = 3;
+        el.textContent = count + 's后自动解锁';
+        detailCountdownTimer = setInterval(function() {
+          count--;
+          if (count <= 0) {
+            clearInterval(detailCountdownTimer);
+            detailCountdownTimer = null;
+            el.textContent = '解锁中...';
+            cb();
+          } else {
+            el.textContent = count + 's后自动解锁';
+          }
+        }, 1000);
+      };
+
+      window.onDetailPlayClick = function() {
+        showToast('播放视频预览');
+      };
+
+      window.onDetailUnlockClick = function() {
+        if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
+        if (!currentViewTpl) return;
+        // Show ad modal (reuse unlock modal)
+        document.getElementById('unlock-tpl-name').textContent = currentViewTpl.name;
+        document.getElementById('unlock-watch-text').textContent = '看广告';
+        var btn = document.getElementById('unlock-watch-btn');
+        btn.disabled = false;
+        document.getElementById('unlock-modal').classList.add('show');
+        window.__startUnlockCountdown();
+        // Override unlock callback to refresh detail page
+        window.__detailUnlockCb = function() {
+          // Re-enter detail page
+          window._tplCardClick(currentViewTpl.name);
+        };
+      };
+
+      window.onThumbUnlockClick = function(e) {
+        e.stopPropagation();
+        window.onDetailUnlockClick();
+      };
+
+      window.switchDetailThumb = function(index, el) {
+        var items = document.querySelectorAll('.detail-thumb-item');
+        for (var i = 0; i < items.length; i++) {
+          items[i].classList.remove('active');
+        }
+        el.classList.add('active');
+        // Switch main image icon (simulated)
+        if (currentViewTpl) {
+          document.getElementById('detail-photo-icon').textContent = currentViewTpl.emoji;
+        }
       };
 
       window.onAddToPrivate = function() {
@@ -1858,7 +2056,18 @@
 
       window.onMakeSame = function() {
         if (!currentViewTpl) return;
-        // Populate create page
+        // Check points
+        if (totalPoints < currentViewTpl.points) {
+          closeSubPage('tpl-detail');
+          if (isVip) {
+            openSubPage('points');
+            showToast('积分不足，请充值积分');
+          } else {
+            showToast('跳转到会员开通页面');
+          }
+          return;
+        }
+        // Go to create page
         document.getElementById('create-preview-icon').textContent = currentViewTpl.emoji;
         document.getElementById('create-points-cost').textContent = '消耗 ' + currentViewTpl.points + ' 积分';
         uploadMaterials = [];
@@ -2039,6 +2248,11 @@
           renderWaterfall('home-waterfall', videoTemplates.slice(0, 6));
           renderWaterfall('video-waterfall', videoTemplates);
           renderWaterfall('photo-waterfall', photoTemplates);
+        }
+        // Callback for detail page refresh
+        if (window.__detailUnlockCb) {
+          window.__detailUnlockCb();
+          window.__detailUnlockCb = null;
         }
         if (unlockCountdownTimer) { clearInterval(unlockCountdownTimer); unlockCountdownTimer = null; }
       };
