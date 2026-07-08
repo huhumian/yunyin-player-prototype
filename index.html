@@ -1912,14 +1912,10 @@
           if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
         }
 
-        // Bottom button
+        // Bottom button - always show for unlocked or partially viewable (photo first 2)
         var makeBtn = document.getElementById('detail-make-btn');
-        if (!isLocked) {
-          makeBtn.textContent = tpl.points + '积分一键做同款';
-          makeBtn.style.display = 'block';
-        } else {
-          makeBtn.style.display = 'none';
-        }
+        makeBtn.textContent = tpl.points + '积分一键做同款';
+        makeBtn.style.display = 'block';
 
         uploadMaterials = [];
         document.getElementById('create-materials').innerHTML = '';
