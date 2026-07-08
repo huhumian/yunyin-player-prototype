@@ -338,6 +338,32 @@
       color: var(--text3);
     }
 
+    /* Banner ad in My page */
+    .banner-ad {
+      margin: 0 16px 12px;
+      padding: 12px 16px;
+      background: var(--ad-bg);
+      border: 1px dashed var(--ad-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 60px;
+    }
+    .banner-ad .banner-ad-tag {
+      background: var(--text3);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+    .banner-ad .banner-ad-text {
+      font-size: 13px;
+      color: var(--text3);
+    }
+
     /* ====== SUB PAGE: Private Video / Album ====== */
     .sub-header {
       display: flex;
@@ -1302,6 +1328,12 @@
             </div>
           </div>
 
+          <!-- Banner Ad (hidden for VIP) -->
+          <div class="banner-ad" id="mine-banner-ad" style="display:none;">
+            <span class="banner-ad-tag">广告</span>
+            <span class="banner-ad-text">Banner广告占位</span>
+          </div>
+
           <!-- Menu -->
           <div class="menu-section">
             <div class="menu-item points-entry" onclick="openSubPage('points')">
@@ -1757,6 +1789,9 @@
         renderWaterfall('home-waterfall', videoTemplates.slice(0, 6));
         renderWaterfall('video-waterfall', videoTemplates);
         renderWaterfall('photo-waterfall', photoTemplates);
+        // Show/hide banner ad in My page
+        var bannerAd = document.getElementById('mine-banner-ad');
+        if (bannerAd) bannerAd.style.display = isVip ? 'none' : 'flex';
       };
 
       // ===== Current viewing template =====
