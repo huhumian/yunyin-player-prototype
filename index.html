@@ -995,7 +995,6 @@
 .tpl-detail-preview {
   width: 100%;
   aspect-ratio: 9/16;
-  max-height: 420px;
   background: linear-gradient(135deg, #1f2937, #374151);
   position: relative;
   display: flex;
@@ -1397,7 +1396,7 @@
       <div class="screen-page" id="page-tpl-detail">
         <div class="sub-header">
           <span class="back-btn" onclick="closeSubPage('tpl-detail')">‹</span>
-          <span class="sub-title">模版详情</span>
+          <span class="sub-title" id="detail-sub-title">模版详情</span>
         </div>
         <div style="overflow-y:auto;height:calc(100% - 46px - 70px);">
           <div class="tpl-detail-preview">
@@ -1411,7 +1410,7 @@
         </div>
         <div class="tpl-detail-bottom">
           <button class="btn-add-private" id="detail-add-btn" onclick="onAddToPrivate()">添加到私密视频</button>
-          <button class="btn-make-same" onclick="onMakeSame()">一键做同款</button>
+          <button class="btn-make-same" id="detail-make-btn" onclick="onMakeSame()">一键做同款</button>
         </div>
       </div>
 
@@ -1529,6 +1528,7 @@
       if (window.__lockedCount[tplName] === 1) {
         if (window.__showToast) window.__showToast('跳转到会员开通页面');
       } else {
+        window.__unlockForFeature = false;
         document.getElementById('unlock-tpl-name').textContent = tplName;
         document.getElementById('unlock-watch-text').textContent = '看广告';
         var btn = document.getElementById('unlock-watch-btn');
@@ -1781,6 +1781,7 @@
         // Populate detail page
         document.getElementById('detail-preview-icon').textContent = tpl.emoji;
         document.getElementById('detail-tpl-name').textContent = tpl.name;
+        document.getElementById('detail-sub-title').textContent = tpl.name;
 
         var tagsHtml = '<span class="tpl-detail-tag">🎬 ' + (currentViewType === 'video' ? '视频' : '写真') + '</span>';
         if (tpl.vip) tagsHtml += '<span class="tpl-detail-tag vip-tag">👑 VIP</span>';
@@ -1790,6 +1791,9 @@
         // Update "添加到" button text
         var addBtn = document.getElementById('detail-add-btn');
         addBtn.textContent = currentViewType === 'video' ? '添加到私密视频' : '添加到私密相册';
+
+        // Update "一键做同款" button text with points
+        document.getElementById('detail-make-btn').textContent = '一键做同款（' + tpl.points + '积分）';
 
         // Reset add click count for this template
         if (!addClickCount[tplName]) addClickCount[tplName] = 0;
@@ -1820,7 +1824,9 @@
           if (addClickCount[name] === 1) {
             showToast('跳转到会员开通页面');
           } else {
-            document.getElementById('unlock-tpl-name').textContent = name;
+            window.__unlockForFeature = true;
+            var featureName = '添加到私密' + (currentViewType === 'video' ? '视频' : '相册') + '功能';
+            document.getElementById('unlock-tpl-name').textContent = featureName;
             document.getElementById('unlock-watch-text').textContent = '看广告';
             var btn = document.getElementById('unlock-watch-btn');
             btn.disabled = false;
@@ -1996,22 +2002,24 @@
       window.__startUnlockCountdown = startUnlockCountdown;
 
       window.doUnlockTemplate = function() {
-        var tplName = document.getElementById('unlock-tpl-name').textContent;
+        var unlockedName = document.getElementById('unlock-tpl-name').textContent;
         closeModalDirect('unlock-modal');
-        showToast('🎉 已解锁「' + tplName + '」，24小时内可用');
-        // Mark all templates with this name as unlocked and re-render
-        function unlockInList(list) {
-          for (var i = 0; i < list.length; i++) {
-            if (list[i].name === tplName && list[i].locked) {
-              list[i].locked = false;
+        showToast('🎉 已解锁「' + unlockedName + '」，24小时内可用');
+        if (!window.__unlockForFeature) {
+          // Mark all templates with this name as unlocked and re-render
+          function unlockInList(list) {
+            for (var i = 0; i < list.length; i++) {
+              if (list[i].name === unlockedName && list[i].locked) {
+                list[i].locked = false;
+              }
             }
           }
+          unlockInList(videoTemplates);
+          unlockInList(photoTemplates);
+          renderWaterfall('home-waterfall', videoTemplates.slice(0, 6));
+          renderWaterfall('video-waterfall', videoTemplates);
+          renderWaterfall('photo-waterfall', photoTemplates);
         }
-        unlockInList(videoTemplates);
-        unlockInList(photoTemplates);
-        renderWaterfall('home-waterfall', videoTemplates.slice(0, 6));
-        renderWaterfall('video-waterfall', videoTemplates);
-        renderWaterfall('photo-waterfall', photoTemplates);
         if (unlockCountdownTimer) { clearInterval(unlockCountdownTimer); unlockCountdownTimer = null; }
       };
 
