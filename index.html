@@ -1632,28 +1632,12 @@
     (function() {
       // Template data
       var videoTemplates = [
-        { name: '古风变装', emoji: '🏯', vip: true, locked: true, points: 30, h: 'tall' },
-        { name: '动漫转换', emoji: '✨', vip: false, locked: false, points: 10, h: 'short' },
-        { name: '电影滤镜', emoji: '🎬', vip: false, locked: false, points: 15, h: 'medium' },
-        { name: 'AI换脸', emoji: '🤖', vip: true, locked: true, points: 40, h: 'short' },
-        { name: '写真生成', emoji: '📸', vip: false, locked: false, points: 10, h: 'tall' },
-        { name: '穿越特效', emoji: '⏰', vip: true, locked: true, points: 35, h: 'medium' },
-        { name: '卡点视频', emoji: '🎵', vip: false, locked: false, points: 15, h: 'short' },
-        { name: '节日祝福', emoji: '🎉', vip: false, locked: false, points: 10, h: 'tall' },
-        { name: '漫画风', emoji: '🖊️', vip: true, locked: true, points: 25, h: 'medium' },
-        { name: '怀旧风', emoji: '📻', vip: false, locked: false, points: 10, h: 'short' },
+        { name: '视频模版-积分充足', emoji: '🎬', vip: true, locked: true, points: 5, h: 'tall' },
+        { name: '视频模版-积分不足', emoji: '🎥', vip: true, locked: true, points: 1000, h: 'short' },
       ];
       var photoTemplates = [
-        { name: '职业证件照', emoji: '🪪', vip: false, locked: false, points: 10, h: 'medium' },
-        { name: '古风写真', emoji: '🎭', vip: true, locked: true, points: 30, h: 'tall' },
-        { name: '动漫头像', emoji: '😺', vip: false, locked: false, points: 10, h: 'short' },
-        { name: '油画风', emoji: '🖼️', vip: true, locked: true, points: 35, h: 'medium' },
-        { name: '艺术写真', emoji: '🎨', vip: false, locked: false, points: 15, h: 'tall' },
-        { name: 'AI美颜', emoji: '💄', vip: false, locked: false, points: 10, h: 'short' },
-        { name: '科幻风', emoji: '🚀', vip: true, locked: true, points: 25, h: 'medium' },
-        { name: '节日头像', emoji: '🧧', vip: false, locked: false, points: 10, h: 'tall' },
-        { name: '素描风', emoji: '✏️', vip: true, locked: true, points: 30, h: 'short' },
-        { name: '清新日系', emoji: '🌸', vip: false, locked: false, points: 15, h: 'medium' },
+        { name: '图片模版-积分充足', emoji: '📸', vip: true, locked: true, points: 5, h: 'medium' },
+        { name: '图片模版-积分不足', emoji: '🖼️', vip: true, locked: true, points: 1000, h: 'tall' },
       ];
 
       function buildCard(tpl, index) {
@@ -1865,7 +1849,7 @@
         // Header title
         document.getElementById('detail-sub-title').textContent = tpl.name;
 
-        var isLocked = tpl.locked && !isVip;
+        var isLocked = !isVip;
 
         if (currentViewType === 'video') {
           // Show video preview, hide photo gallery
