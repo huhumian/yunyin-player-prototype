@@ -990,6 +990,206 @@
         transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s, background 0.2s;
       }
     }
+
+/* ===== Template Detail Page ===== */
+.tpl-detail-preview {
+  width: 100%;
+  aspect-ratio: 9/16;
+  max-height: 420px;
+  background: linear-gradient(135deg, #1f2937, #374151);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.tpl-detail-preview .preview-icon {
+  font-size: 80px;
+  filter: grayscale(0.3);
+}
+.tpl-detail-preview .preview-play {
+  width: 56px;
+  height: 56px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.tpl-detail-preview .preview-play::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 18px solid #fff;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  margin-left: 4px;
+}
+.tpl-detail-info {
+  padding: 16px;
+}
+.tpl-detail-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.tpl-detail-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.tpl-detail-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--brand-bg);
+  color: var(--brand);
+  font-weight: 600;
+}
+.tpl-detail-tag.vip-tag {
+  background: var(--vip-bg);
+  color: var(--vip-gold);
+}
+.tpl-detail-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+}
+.tpl-detail-bottom .btn-add-private {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid var(--brand);
+  background: #fff;
+  color: var(--brand);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tpl-detail-bottom .btn-add-private:active {
+  background: var(--brand-bg);
+}
+.tpl-detail-bottom .btn-make-same {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--brand), var(--brand-light));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.tpl-detail-bottom .btn-make-same:active {
+  opacity: 0.85;
+}
+
+/* ===== Create Page (素材上传制作同款) ===== */
+.create-upload-area {
+  margin: 16px;
+  padding: 32px 20px;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  text-align: center;
+  background: var(--bg);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.create-upload-area:active {
+  border-color: var(--brand);
+}
+.create-upload-area .upload-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+.create-upload-area .upload-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.create-upload-area .upload-desc {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+.create-preview-list {
+  padding: 0 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.create-preview-item {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+.create-preview-item .remove-btn {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  background: var(--danger);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+}
+.create-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+}
+.create-make-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, var(--brand), var(--brand-light));
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.create-make-btn:active { opacity: 0.85; }
+.create-make-btn .points-cost {
+  background: rgba(255,255,255,0.25);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.create-make-btn.disabled {
+  background: var(--text3);
+  cursor: not-allowed;
+}
   </style>
 </head>
 <body>
@@ -1096,6 +1296,12 @@
             </div>
             <div class="vip-desc">解锁全部VIP模版 · 免广告 · 赠送积分</div>
           </div>
+          <div style="padding:0 16px 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;">
+              <span style="font-size:13px;color:var(--text2);">模拟VIP状态</span>
+              <div class="toggle-switch" id="toggle-vip" onclick="toggleVip()"></div>
+            </div>
+          </div>
 
           <!-- Menu -->
           <div class="menu-section">
@@ -1184,6 +1390,56 @@
         <div class="sub-content">
           <div id="pa-private-content"></div>
           <div id="pa-local-content" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- ===== SUB PAGE: Template Detail ===== -->
+      <div class="screen-page" id="page-tpl-detail">
+        <div class="sub-header">
+          <span class="back-btn" onclick="closeSubPage('tpl-detail')">‹</span>
+          <span class="sub-title">模版详情</span>
+        </div>
+        <div style="overflow-y:auto;height:calc(100% - 46px - 70px);">
+          <div class="tpl-detail-preview">
+            <span class="preview-icon" id="detail-preview-icon">🎬</span>
+            <div class="preview-play"></div>
+          </div>
+          <div class="tpl-detail-info">
+            <div class="tpl-detail-name" id="detail-tpl-name">模版名称</div>
+            <div class="tpl-detail-tags" id="detail-tpl-tags"></div>
+          </div>
+        </div>
+        <div class="tpl-detail-bottom">
+          <button class="btn-add-private" id="detail-add-btn" onclick="onAddToPrivate()">添加到私密视频</button>
+          <button class="btn-make-same" onclick="onMakeSame()">一键做同款</button>
+        </div>
+      </div>
+
+      <!-- ===== SUB PAGE: Create Same Style ===== -->
+      <div class="screen-page" id="page-create">
+        <div class="sub-header">
+          <span class="back-btn" onclick="closeSubPage('create')">‹</span>
+          <span class="sub-title">制作同款</span>
+        </div>
+        <div style="overflow-y:auto;height:calc(100% - 46px - 70px);">
+          <div class="tpl-detail-preview" style="max-height:160px;aspect-ratio:16/9;">
+            <span class="preview-icon" id="create-preview-icon" style="font-size:40px;">🎬</span>
+          </div>
+          <div style="padding:12px 16px 8px;">
+            <div style="font-size:14px;font-weight:600;color:var(--text);">上传素材</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:2px;" id="create-upload-hint">请上传图片或视频素材</div>
+          </div>
+          <div class="create-upload-area" onclick="simulateUploadMaterial()">
+            <div class="upload-icon">📷</div>
+            <div class="upload-title">点击上传素材</div>
+            <div class="upload-desc">支持 JPG、PNG、MP4 格式</div>
+          </div>
+          <div class="create-preview-list" id="create-materials"></div>
+        </div>
+        <div class="create-bottom-bar">
+          <button class="create-make-btn" id="create-make-btn" onclick="onConfirmCreate()">
+            制作同款 <span class="points-cost" id="create-points-cost">消耗 10 积分</span>
+          </button>
         </div>
       </div>
 
@@ -1323,6 +1579,9 @@
         var lockHtml = '';
         var vipHtml = '';
         var clickAttr = '';
+        if (!tpl.locked) {
+          clickAttr = ' onclick="window._tplCardClick(\'' + tpl.name + '\')"';
+        }
         if (tpl.vip) {
           vipHtml = '<span class="vip-badge">VIP</span>';
           if (tpl.locked) {
@@ -1489,6 +1748,172 @@
       // Initial render
       renderSubContent('pv', 'private', false);
       renderSubContent('pa', 'private', false);
+
+      // ===== VIP state simulation =====
+      var isVip = false;
+      window.toggleVip = function() {
+        isVip = !isVip;
+        var toggle = document.getElementById('toggle-vip');
+        toggle.classList.toggle('on', isVip);
+        showToast(isVip ? '已开启VIP状态' : '已关闭VIP状态');
+      };
+
+      // ===== Current viewing template =====
+      var currentViewTpl = null;
+      var currentViewType = 'video'; // 'video' or 'photo'
+      var uploadMaterials = [];
+      var addClickCount = {};
+
+      window._tplCardClick = function(tplName) {
+        // Find template from both lists
+        var tpl = null;
+        for (var i = 0; i < videoTemplates.length; i++) {
+          if (videoTemplates[i].name === tplName) { tpl = videoTemplates[i]; currentViewType = 'video'; break; }
+        }
+        if (!tpl) {
+          for (var j = 0; j < photoTemplates.length; j++) {
+            if (photoTemplates[j].name === tplName) { tpl = photoTemplates[j]; currentViewType = 'photo'; break; }
+          }
+        }
+        if (!tpl) return;
+        currentViewTpl = tpl;
+
+        // Populate detail page
+        document.getElementById('detail-preview-icon').textContent = tpl.emoji;
+        document.getElementById('detail-tpl-name').textContent = tpl.name;
+
+        var tagsHtml = '<span class="tpl-detail-tag">🎬 ' + (currentViewType === 'video' ? '视频' : '写真') + '</span>';
+        if (tpl.vip) tagsHtml += '<span class="tpl-detail-tag vip-tag">👑 VIP</span>';
+        tagsHtml += '<span class="tpl-detail-tag">💎 ' + tpl.points + ' 积分</span>';
+        document.getElementById('detail-tpl-tags').innerHTML = tagsHtml;
+
+        // Update "添加到" button text
+        var addBtn = document.getElementById('detail-add-btn');
+        addBtn.textContent = currentViewType === 'video' ? '添加到私密视频' : '添加到私密相册';
+
+        // Reset add click count for this template
+        if (!addClickCount[tplName]) addClickCount[tplName] = 0;
+
+        uploadMaterials = [];
+        document.getElementById('create-materials').innerHTML = '';
+        document.getElementById('create-upload-hint').textContent = '请上传图片或视频素材';
+        var createBtn = document.getElementById('create-make-btn');
+        createBtn.className = 'create-make-btn';
+
+        openSubPage('tpl-detail');
+      };
+
+      window.onAddToPrivate = function() {
+        if (!currentViewTpl) return;
+        if (isVip) {
+          // VIP直接上传
+          var prefix = currentViewType === 'video' ? 'pv' : 'pa';
+          var emojis = privateEmojis[prefix];
+          privateItems[prefix].push(emojis[Math.floor(Math.random() * emojis.length)]);
+          closeSubPage('tpl-detail');
+          showToast('已添加到私密' + (currentViewType === 'video' ? '视频' : '相册'));
+        } else {
+          // 非VIP：第一次toast，第二次弹窗
+          var name = currentViewTpl.name;
+          if (!addClickCount[name]) addClickCount[name] = 0;
+          addClickCount[name]++;
+          if (addClickCount[name] === 1) {
+            showToast('跳转到会员开通页面');
+          } else {
+            document.getElementById('unlock-tpl-name').textContent = name;
+            document.getElementById('unlock-watch-text').textContent = '看广告';
+            var btn = document.getElementById('unlock-watch-btn');
+            btn.disabled = false;
+            document.getElementById('unlock-modal').classList.add('show');
+            window.__startUnlockCountdown();
+          }
+        }
+      };
+
+      window.onMakeSame = function() {
+        if (!currentViewTpl) return;
+        // Populate create page
+        document.getElementById('create-preview-icon').textContent = currentViewTpl.emoji;
+        document.getElementById('create-points-cost').textContent = '消耗 ' + currentViewTpl.points + ' 积分';
+        uploadMaterials = [];
+        document.getElementById('create-materials').innerHTML = '';
+        document.getElementById('create-upload-hint').textContent = '请上传图片或视频素材';
+        var createBtn = document.getElementById('create-make-btn');
+        createBtn.className = 'create-make-btn';
+        openSubPage('create');
+      };
+
+      window.simulateUploadMaterial = function() {
+        var materialEmojis = ['🧑','👩','👨','👧','👦','🧒','👱','👩‍🦰','👨‍🦱','👩‍🦳'];
+        if (uploadMaterials.length >= 9) {
+          showToast('最多上传9张素材');
+          return;
+        }
+        var emoji = materialEmojis[Math.floor(Math.random() * materialEmojis.length)];
+        var bgs = [
+          'linear-gradient(135deg,#fed7aa,#fdba74)',
+          'linear-gradient(135deg,#ddd6fe,#c4b5fd)',
+          'linear-gradient(135deg,#bbf7d0,#86efac)',
+          'linear-gradient(135deg,#bfdbfe,#93c5fd)',
+          'linear-gradient(135deg,#fbcfe8,#f9a8d4)',
+        ];
+        var bg = bgs[Math.floor(Math.random() * bgs.length)];
+        uploadMaterials.push(emoji);
+
+        var listEl = document.getElementById('create-materials');
+        var idx = uploadMaterials.length - 1;
+        listEl.innerHTML += '<div class="create-preview-item" style="background:' + bg + '"><span>' + emoji + '</span><span class="remove-btn" onclick="removeMaterial(' + idx + ',event)">×</span></div>';
+        document.getElementById('create-upload-hint').textContent = '已上传 ' + uploadMaterials.length + ' 张素材';
+      };
+
+      window.removeMaterial = function(idx, e) {
+        e.stopPropagation();
+        uploadMaterials.splice(idx, 1);
+        var listEl = document.getElementById('create-materials');
+        var items = listEl.querySelectorAll('.create-preview-item');
+        listEl.innerHTML = '';
+        for (var i = 0; i < uploadMaterials.length; i++) {
+          // Re-render is complex, just rebuild
+        }
+        // Simple rebuild
+        var materialEmojis2 = ['🧑','👩','👨','👧','👦','🧒','👱','👩‍🦰','👨‍🦱','👩‍🦳'];
+        var bgs2 = ['linear-gradient(135deg,#fed7aa,#fdba74)','linear-gradient(135deg,#ddd6fe,#c4b5fd)','linear-gradient(135deg,#bbf7d0,#86efac)','linear-gradient(135deg,#bfdbfe,#93c5fd)','linear-gradient(135deg,#fbcfe8,#f9a8d4)'];
+        listEl.innerHTML = '';
+        for (var j = 0; j < uploadMaterials.length; j++) {
+          var bg2 = bgs2[Math.floor(Math.random() * bgs2.length)];
+          listEl.innerHTML += '<div class="create-preview-item" style="background:' + bg2 + '"><span>' + uploadMaterials[j] + '</span><span class="remove-btn" onclick="removeMaterial(' + j + ',event)">×</span></div>';
+        }
+        document.getElementById('create-upload-hint').textContent = uploadMaterials.length > 0 ? '已上传 ' + uploadMaterials.length + ' 张素材' : '请上传图片或视频素材';
+      };
+
+      window.onConfirmCreate = function() {
+        if (!currentViewTpl) return;
+        if (uploadMaterials.length === 0) {
+          showToast('请先上传素材');
+          return;
+        }
+        if (totalPoints < currentViewTpl.points) {
+          // 积分不足
+          closeSubPage('create');
+          if (isVip) {
+            // VIP跳转到积分明细
+            openSubPage('points');
+            showToast('积分不足，请充值积分');
+          } else {
+            // 非VIP跳转到会员开通
+            showToast('跳转到会员开通页面');
+          }
+          return;
+        }
+        // 扣积分
+        totalPoints -= currentViewTpl.points;
+        var now = new Date();
+        var timeStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+        pointsRecords.unshift({ icon: '🎨', type: 'minus', title: 'AI' + (currentViewType === 'video' ? '视频' : '写真') + '-' + currentViewTpl.name, time: timeStr, amount: -currentViewTpl.points });
+        updatePointsDisplay();
+        closeSubPage('create');
+        showToast('制作成功！消耗 ' + currentViewTpl.points + ' 积分');
+      };
 
       // Expose functions
       window.switchTab = function(index) {
