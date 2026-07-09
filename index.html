@@ -2449,7 +2449,7 @@
       window.doUnlockTemplate = function() {
         var unlockedName = document.getElementById('unlock-tpl-name').textContent;
         closeModalDirect('unlock-modal');
-        showToast('🎉 已解锁「' + unlockedName + '」，24小时内可用');
+        showToast('🎉 已解锁「' + unlockedName + '」');
         if (!window.__unlockForFeature) {
           // Mark all templates with this name as unlocked and re-render
           function unlockInList(list) {
