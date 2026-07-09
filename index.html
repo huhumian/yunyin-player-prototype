@@ -1174,6 +1174,18 @@
   border-radius: 20px;
   margin-top: 4px;
 }
+.detail-lock-overlay .lock-ad-btn {
+  margin-top: 10px;
+  padding: 10px 24px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(135deg, var(--brand), var(--brand-light));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.detail-lock-overlay .lock-ad-btn:active { opacity: 0.85; }
 /* Image gallery for photo templates */
 .detail-image-main {
   width: 100%;
@@ -1612,6 +1624,14 @@
           <div class="tpl-detail-preview video-preview" id="detail-video-area" style="display:none;">
             <span class="preview-icon" id="detail-preview-icon">🎬</span>
             <div class="preview-play" id="detail-play-btn" onclick="onDetailPlayClick()"></div>
+            <!-- Lock overlay for locked video templates -->
+            <div class="detail-lock-overlay" id="detail-video-lock" style="display:none;">
+              <span class="lock-icon-big">🔒</span>
+              <span class="lock-hint">该模版需要解锁后查看</span>
+              <span class="lock-sub-hint">观看激励视频或开通会员即可解锁</span>
+              <button class="lock-ad-btn" id="detail-lock-btn" onclick="onDetailUnlockClick()">看广告解锁</button>
+              <span class="lock-ad-countdown" id="detail-video-countdown"></span>
+            </div>
           </div>
           <!-- Photo gallery (shown for photo templates) -->
           <div id="detail-photo-area" style="display:none;">
@@ -2103,13 +2123,19 @@
           document.getElementById('detail-photo-area').style.display = 'none';
           document.getElementById('detail-preview-icon').textContent = tpl.emoji;
 
-          // Play button always visible; if locked, click triggers unlock
           var playBtn = document.getElementById('detail-play-btn');
-          playBtn.style.display = 'flex';
+          var videoLock = document.getElementById('detail-video-lock');
+          var countdownEl = document.getElementById('detail-video-countdown');
           if (isLocked) {
-            // 3s countdown auto-unlock
-            startDetailCountdown(function() { onDetailUnlockClick(); });
+            // Locked: hide play button, show lock overlay, hide make button
+            playBtn.style.display = 'none';
+            videoLock.style.display = 'flex';
+            countdownEl.textContent = '3s后自动解锁';
+            startDetailCountdown(function() { onDetailUnlockClick(); }, countdownEl);
           } else {
+            // Unlocked: show play button, hide lock overlay
+            playBtn.style.display = 'flex';
+            videoLock.style.display = 'none';
             if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
           }
         } else {
@@ -2142,10 +2168,14 @@
           if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
         }
 
-        // Bottom button - always show for unlocked or partially viewable (photo first 2)
+        // Bottom button: hide for locked video templates
         var makeBtn = document.getElementById('detail-make-btn');
-        makeBtn.textContent = tpl.points + '积分一键做同款';
-        makeBtn.style.display = 'block';
+        if (currentViewType === 'video' && isLocked) {
+          makeBtn.style.display = 'none';
+        } else {
+          makeBtn.textContent = tpl.points + '积分一键做同款';
+          makeBtn.style.display = 'block';
+        }
 
         uploadMaterials = [];
         document.getElementById('create-materials').innerHTML = '';
@@ -2158,14 +2188,17 @@
 
       // Detail page countdown
       var detailCountdownTimer = null;
-      window.startDetailCountdown = function(cb) {
+      window.startDetailCountdown = function(cb, el) {
         if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
         var count = 3;
+        if (el) el.textContent = count + 's后自动解锁';
         detailCountdownTimer = setInterval(function() {
           count--;
+          if (el) el.textContent = count + 's后自动解锁';
           if (count <= 0) {
             clearInterval(detailCountdownTimer);
             detailCountdownTimer = null;
+            if (el) el.textContent = '解锁中...';
             cb();
           }
         }, 1000);
