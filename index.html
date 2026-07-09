@@ -2095,7 +2095,7 @@
         // Header title
         document.getElementById('detail-sub-title').textContent = tpl.name;
 
-        var isLocked = !isVip;
+        var isLocked = tpl.locked && !isVip;
 
         if (currentViewType === 'video') {
           // Show video preview, hide photo gallery
