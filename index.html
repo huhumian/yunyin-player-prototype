@@ -2218,18 +2218,14 @@
       window.onDetailUnlockClick = function() {
         if (detailCountdownTimer) { clearInterval(detailCountdownTimer); detailCountdownTimer = null; }
         if (!currentViewTpl) return;
-        // Show ad modal (reuse unlock modal)
+        // Directly unlock without showing intermediate modal
         document.getElementById('unlock-tpl-name').textContent = currentViewTpl.name;
-        document.getElementById('unlock-watch-text').textContent = '看广告';
-        var btn = document.getElementById('unlock-watch-btn');
-        btn.disabled = false;
-        document.getElementById('unlock-modal').classList.add('show');
-        window.__startUnlockCountdown();
-        // Override unlock callback to refresh detail page
+        window.__unlockForFeature = false;
+        // Set callback to refresh detail page after unlock
         window.__detailUnlockCb = function() {
-          // Re-enter detail page
           window._tplCardClick(currentViewTpl.name);
         };
+        doUnlockTemplate();
       };
 
       window.onThumbUnlockClick = function(e) {
