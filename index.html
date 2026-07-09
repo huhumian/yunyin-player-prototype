@@ -1485,7 +1485,7 @@
               <span class="menu-value" id="my-points-value">860</span>
               <span class="menu-arrow">›</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item" onclick="openSubPage('works')">
               <span class="menu-icon">🎨</span>
               <span class="menu-label">我的作品</span>
               <span class="menu-value">12个</span>
@@ -1506,8 +1506,8 @@
           </div>
         </div>
 
-        <!-- ===== TAB: My Works ===== -->
-        <div class="tab-page" id="tab-works">
+      <!-- ===== SUB PAGE: My Works ===== -->
+      <div class="screen-page" id="page-works">
           <div class="tab-header">
             <h1 style="font-size:20px;font-weight:700;">我的作品</h1>
           </div>
@@ -1538,10 +1538,6 @@
             <span class="nav-icon">👤</span>
             <span>我的</span>
           </div>
-          <div class="nav-item" data-tab="4" onclick="switchTab(4)">
-            <span class="nav-icon">📂</span>
-            <span>我的作品</span>
-          </div>
         </nav>
       </div>
 
@@ -1549,15 +1545,14 @@
       <div class="screen-page" id="page-work-detail">
         <div class="sub-header">
           <span class="back-btn" onclick="closeSubPage('work-detail')">‹</span>
-          <span class="sub-title">作品详情</span>
+          <span class="sub-title" id="work-detail-title">作品详情</span>
         </div>
         <div style="overflow-y:auto;height:calc(100% - 46px - 100px);">
           <div class="detail-image-main" id="work-detail-preview">
             <span class="preview-icon" id="work-detail-icon">🎬</span>
           </div>
           <div style="padding:12px 16px;">
-            <div style="font-size:16px;font-weight:600;color:var(--text);" id="work-detail-name">作品名称</div>
-            <div style="font-size:12px;color:var(--text3);margin-top:4px;" id="work-detail-time">2026-07-08 12:00</div>
+            <div style="font-size:12px;color:var(--text3);" id="work-detail-time">2026-07-08 12:00</div>
           </div>
         </div>
         <div class="tpl-detail-bottom" id="work-detail-bottom">
@@ -1758,24 +1753,24 @@
     (function() {
       // Template data
       var videoTemplates = [
-        { name: '视频模版-积分充足', emoji: '🎬', vip: true, locked: true, points: 5, h: 'tall' },
-        { name: '视频模版-积分不足', emoji: '🎥', vip: true, locked: true, points: 1000, h: 'short' },
-        { name: '视频模版-积分充足', emoji: '🎬', vip: true, locked: true, points: 5, h: 'medium' },
-        { name: '视频模版-积分不足', emoji: '🎥', vip: true, locked: true, points: 1000, h: 'tall' },
-        { name: '视频模版-积分充足', emoji: '🎬', vip: true, locked: true, points: 5, h: 'short' },
-        { name: '视频模版-积分不足', emoji: '🎥', vip: true, locked: true, points: 1000, h: 'medium' },
-        { name: '视频模版-积分充足', emoji: '🎬', vip: true, locked: true, points: 5, h: 'tall' },
-        { name: '视频模版-积分不足', emoji: '🎥', vip: true, locked: true, points: 1000, h: 'short' },
+        { name: '视频模版-已解锁-积分充足', emoji: '🎬', vip: true, locked: false, points: 5, h: 'tall' },
+        { name: '视频模版-已解锁-积分不足', emoji: '🎥', vip: true, locked: false, points: 1000, h: 'short' },
+        { name: '视频模版-未解锁-积分充足', emoji: '🎬', vip: true, locked: true, points: 5, h: 'medium' },
+        { name: '视频模版-未解锁-积分不足', emoji: '🎥', vip: true, locked: true, points: 1000, h: 'tall' },
+        { name: '视频模版-已解锁-积分充足', emoji: '🎬', vip: true, locked: false, points: 5, h: 'short' },
+        { name: '视频模版-已解锁-积分不足', emoji: '🎥', vip: true, locked: false, points: 1000, h: 'medium' },
+        { name: '视频模版-未解锁-积分充足', emoji: '🎬', vip: true, locked: true, points: 5, h: 'tall' },
+        { name: '视频模版-未解锁-积分不足', emoji: '🎥', vip: true, locked: true, points: 1000, h: 'short' },
       ];
       var photoTemplates = [
-        { name: '图片模版-积分充足', emoji: '📸', vip: true, locked: true, points: 5, h: 'medium' },
-        { name: '图片模版-积分不足', emoji: '🖼️', vip: true, locked: true, points: 1000, h: 'tall' },
-        { name: '图片模版-积分充足', emoji: '📸', vip: true, locked: true, points: 5, h: 'tall' },
-        { name: '图片模版-积分不足', emoji: '🖼️', vip: true, locked: true, points: 1000, h: 'short' },
-        { name: '图片模版-积分充足', emoji: '📸', vip: true, locked: true, points: 5, h: 'short' },
-        { name: '图片模版-积分不足', emoji: '🖼️', vip: true, locked: true, points: 1000, h: 'medium' },
-        { name: '图片模版-积分充足', emoji: '📸', vip: true, locked: true, points: 5, h: 'tall' },
-        { name: '图片模版-积分不足', emoji: '🖼️', vip: true, locked: true, points: 1000, h: 'medium' },
+        { name: '图片模版-已解锁-积分充足', emoji: '📸', vip: true, locked: false, points: 5, h: 'medium' },
+        { name: '图片模版-已解锁-积分不足', emoji: '🖼️', vip: true, locked: false, points: 1000, h: 'tall' },
+        { name: '图片模版-未解锁-积分充足', emoji: '📸', vip: true, locked: true, points: 5, h: 'short' },
+        { name: '图片模版-未解锁-积分不足', emoji: '🖼️', vip: true, locked: true, points: 1000, h: 'medium' },
+        { name: '图片模版-已解锁-积分充足', emoji: '📸', vip: true, locked: false, points: 5, h: 'tall' },
+        { name: '图片模版-已解锁-积分不足', emoji: '🖼️', vip: true, locked: false, points: 1000, h: 'short' },
+        { name: '图片模版-未解锁-积分充足', emoji: '📸', vip: true, locked: true, points: 5, h: 'medium' },
+        { name: '图片模版-未解锁-积分不足', emoji: '🖼️', vip: true, locked: true, points: 1000, h: 'tall' },
       ];
 
       function buildCard(tpl, index) {
@@ -1990,12 +1985,12 @@
 
       // ===== My Works =====
       var myWorks = [
-        { name: '视频模版-积分充足', type: 'video', emoji: '🎬', status: 'success', time: '2026-07-08 14:30' },
-        { name: '视频模版-积分不足', type: 'video', emoji: '🎥', status: 'generating', time: '2026-07-08 14:35' },
-        { name: '图片模版-积分充足', type: 'photo', emoji: '📸', status: 'success', time: '2026-07-08 15:00' },
-        { name: '图片模版-积分不足', type: 'photo', emoji: '🖼️', status: 'failed', time: '2026-07-08 15:05' },
-        { name: '视频模版-积分充足', type: 'video', emoji: '🎬', status: 'generating', time: '2026-07-08 15:10' },
-        { name: '图片模版-积分充足', type: 'photo', emoji: '📸', status: 'success', time: '2026-07-08 15:30' },
+        { name: '视频模版-已解锁-积分充足', type: 'video', emoji: '🎬', status: 'success', time: '2026-07-08 14:30' },
+        { name: '视频模版-未解锁-积分充足', type: 'video', emoji: '🎬', status: 'generating', time: '2026-07-08 14:35' },
+        { name: '图片模版-已解锁-积分不足', type: 'photo', emoji: '🖼️', status: 'success', time: '2026-07-08 15:00' },
+        { name: '图片模版-未解锁-积分不足', type: 'photo', emoji: '🖼️', status: 'failed', time: '2026-07-08 15:05' },
+        { name: '视频模版-已解锁-积分不足', type: 'video', emoji: '🎥', status: 'generating', time: '2026-07-08 15:10' },
+        { name: '图片模版-未解锁-积分充足', type: 'photo', emoji: '📸', status: 'success', time: '2026-07-08 15:30' },
       ];
 
       var currentWorkFilter = 'all';
@@ -2036,7 +2031,7 @@
         var w = myWorks[index];
         if (!w) return;
         document.getElementById('work-detail-icon').textContent = w.emoji;
-        document.getElementById('work-detail-name').textContent = w.name;
+        document.getElementById('work-detail-title').textContent = w.name;
         document.getElementById('work-detail-time').textContent = w.time;
 
         // Adjust preview aspect ratio based on type
