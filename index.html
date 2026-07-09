@@ -218,12 +218,12 @@
     }
     .waterfall {
       padding: 0 10px 20px;
-      column-count: 2;
-      column-gap: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .tpl-card {
-      break-inside: avoid;
-      margin-bottom: 10px;
+      width: calc(50% - 5px);
       border-radius: 10px;
       overflow: hidden;
       background: var(--card);
@@ -232,11 +232,7 @@
       transition: transform 0.15s;
     }
     .tpl-card:active { transform: scale(0.98); }
-    .tpl-card .thumb {
-      width: 100%;
-      display: block;
-      position: relative;
-    }
+    .tpl-card .thumb { width: 100%; }
     .tpl-card .thumb-inner {
       width: 100%;
       background: linear-gradient(135deg, #c7d2fe, #ddd6fe);
@@ -334,6 +330,97 @@
     .tpl-card.ad-card .ad-label {
       font-size: 11px;
       color: var(--text3);
+    }
+
+    /* ====== My Works Page ====== */
+    .works-grid {
+      padding: 12px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .work-card {
+      width: calc(50% - 5px);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: transform 0.15s;
+      position: relative;
+    }
+    .work-card:active { transform: scale(0.98); }
+    .work-card-thumb {
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      position: relative;
+    }
+    .work-card-thumb.generating {
+      background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+    }
+    .work-card-thumb.failed {
+      background: linear-gradient(135deg, #fecaca, #fca5a5);
+    }
+    .work-card-thumb.success {
+      background: linear-gradient(135deg, #bbf7d0, #86efac);
+    }
+    .work-card-status {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fff;
+    }
+    .work-card-status.generating { background: rgba(0,0,0,0.5); }
+    .work-card-status.failed { background: #ef4444; }
+    .work-card-status.success { background: #22c55e; }
+    .work-card-name {
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .work-card-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .work-card-overlay span {
+      font-size: 24px;
+    }
+    /* Works tab */
+    .works-tab-bar {
+      display: flex;
+      gap: 0;
+      padding: 0 16px;
+      margin-bottom: 12px;
+    }
+    .works-tab-item {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text3);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+    .works-tab-item.active {
+      color: var(--brand);
+      border-bottom-color: var(--brand);
     }
 
     /* Banner ad in My page */
@@ -1419,6 +1506,20 @@
           </div>
         </div>
 
+        <!-- ===== TAB: My Works ===== -->
+        <div class="tab-page" id="tab-works">
+          <div class="tab-header">
+            <h1 style="font-size:20px;font-weight:700;">我的作品</h1>
+          </div>
+          <div class="works-tab-bar">
+            <div class="works-tab-item active" id="works-tab-all" onclick="switchWorksTab('all')">全部</div>
+            <div class="works-tab-item" id="works-tab-success" onclick="switchWorksTab('success')">已完成</div>
+            <div class="works-tab-item" id="works-tab-generating" onclick="switchWorksTab('generating')">生成中</div>
+            <div class="works-tab-item" id="works-tab-failed" onclick="switchWorksTab('failed')">失败</div>
+          </div>
+          <div class="works-grid" id="works-grid"></div>
+        </div>
+
         <!-- Bottom Navigation -->
         <nav class="bottom-nav" id="bottomNav">
           <div class="nav-item active" data-tab="0" onclick="switchTab(0)">
@@ -1437,7 +1538,32 @@
             <span class="nav-icon">👤</span>
             <span>我的</span>
           </div>
+          <div class="nav-item" data-tab="4" onclick="switchTab(4)">
+            <span class="nav-icon">📂</span>
+            <span>我的作品</span>
+          </div>
         </nav>
+      </div>
+
+      <!-- ===== SUB PAGE: Work Detail ===== -->
+      <div class="screen-page" id="page-work-detail">
+        <div class="sub-header">
+          <span class="back-btn" onclick="closeSubPage('work-detail')">‹</span>
+          <span class="sub-title">作品详情</span>
+        </div>
+        <div style="overflow-y:auto;height:calc(100% - 46px - 100px);">
+          <div class="detail-image-main" id="work-detail-preview">
+            <span class="preview-icon" id="work-detail-icon">🎬</span>
+          </div>
+          <div style="padding:12px 16px;">
+            <div style="font-size:16px;font-weight:600;color:var(--text);" id="work-detail-name">作品名称</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:4px;" id="work-detail-time">2026-07-08 12:00</div>
+          </div>
+        </div>
+        <div class="tpl-detail-bottom" id="work-detail-bottom">
+          <button class="btn-add-private" id="work-save-btn" onclick="onWorkSave()">保存到私密视频</button>
+          <button class="btn-make-same" id="work-download-btn" onclick="onWorkDownload()">下载</button>
+        </div>
       </div>
 
       <!-- ===== SUB PAGE: Private Video ===== -->
@@ -1685,7 +1811,15 @@
       }
 
       // Render all waterfalls
-      renderWaterfall('home-waterfall', videoTemplates.slice(0, 6));
+      (function(){
+        var ht = [];
+        var ml = Math.max(videoTemplates.length, photoTemplates.length);
+        for (var xi = 0; xi < ml; xi++) {
+          if (xi < videoTemplates.length) ht.push(videoTemplates[xi]);
+          if (xi < photoTemplates.length) ht.push(photoTemplates[xi]);
+        }
+        renderWaterfall('home-waterfall', ht.slice(0, 12));
+      })();
       renderWaterfall('video-waterfall', videoTemplates);
       renderWaterfall('photo-waterfall', photoTemplates);
 
@@ -1830,12 +1964,22 @@
         toggle.classList.toggle('on', isVip);
         showToast(isVip ? '已开启VIP状态' : '已关闭VIP状态');
         // Re-render all waterfalls to reflect VIP state (ads hidden, templates unlocked)
-        renderWaterfall('home-waterfall', videoTemplates.slice(0, 6));
+        (function(){
+          var ht = [];
+          var ml = Math.max(videoTemplates.length, photoTemplates.length);
+          for (var xi = 0; xi < ml; xi++) {
+            if (xi < videoTemplates.length) ht.push(videoTemplates[xi]);
+            if (xi < photoTemplates.length) ht.push(photoTemplates[xi]);
+          }
+          renderWaterfall('home-waterfall', ht.slice(0, 12));
+        })();
         renderWaterfall('video-waterfall', videoTemplates);
         renderWaterfall('photo-waterfall', photoTemplates);
         // Show/hide banner ad in My page
         var bannerAd = document.getElementById('mine-banner-ad');
         if (bannerAd) bannerAd.style.display = isVip ? 'none' : 'flex';
+        // Re-render works
+        renderWorks();
       };
 
       // ===== Current viewing template =====
@@ -1843,6 +1987,101 @@
       var currentViewType = 'video'; // 'video' or 'photo'
       var uploadMaterials = [];
       var addClickCount = {};
+
+      // ===== My Works =====
+      var myWorks = [
+        { name: '视频模版-积分充足', type: 'video', emoji: '🎬', status: 'success', time: '2026-07-08 14:30' },
+        { name: '视频模版-积分不足', type: 'video', emoji: '🎥', status: 'generating', time: '2026-07-08 14:35' },
+        { name: '图片模版-积分充足', type: 'photo', emoji: '📸', status: 'success', time: '2026-07-08 15:00' },
+        { name: '图片模版-积分不足', type: 'photo', emoji: '🖼️', status: 'failed', time: '2026-07-08 15:05' },
+        { name: '视频模版-积分充足', type: 'video', emoji: '🎬', status: 'generating', time: '2026-07-08 15:10' },
+        { name: '图片模版-积分充足', type: 'photo', emoji: '📸', status: 'success', time: '2026-07-08 15:30' },
+      ];
+
+      var currentWorkFilter = 'all';
+
+      window.switchWorksTab = function(filter) {
+        currentWorkFilter = filter;
+        var tabs = ['all','success','generating','failed'];
+        for (var i = 0; i < tabs.length; i++) {
+          document.getElementById('works-tab-' + tabs[i]).classList.toggle('active', tabs[i] === filter);
+        }
+        renderWorks();
+      };
+
+      window.renderWorks = function() {
+        var grid = document.getElementById('works-grid');
+        var html = '';
+        for (var i = 0; i < myWorks.length; i++) {
+          var w = myWorks[i];
+          if (currentWorkFilter !== 'all' && w.status !== currentWorkFilter) continue;
+          var statusLabel = w.status === 'generating' ? '生成中' : (w.status === 'failed' ? '生成失败' : '生成成功');
+          html += '<div class="work-card"' + (w.status === 'success' ? ' onclick="openWorkDetail(' + i + ')"' : '') + '>' +
+            '<div class="work-card-thumb ' + w.status + '">' +
+              '<span>' + w.emoji + '</span>' +
+              '<span class="work-card-status ' + w.status + '">' + statusLabel + '</span>' +
+              (w.status === 'generating' ? '<div class="work-card-overlay"><span>⏳</span></div>' : '') +
+              (w.status === 'failed' ? '<div class="work-card-overlay"><span>❌</span></div>' : '') +
+            '</div>' +
+            '<div class="work-card-name">' + w.name + '</div>' +
+          '</div>';
+        }
+        if (html === '') {
+          html = '<div class="empty-state" style="padding:40px;width:100%;"><span class="empty-icon">📭</span><div class="empty-title">暂无作品</div><div class="empty-desc">制作AI视频或写真后将在这里展示</div></div>';
+        }
+        grid.innerHTML = html;
+      };
+
+      window.openWorkDetail = function(index) {
+        var w = myWorks[index];
+        if (!w) return;
+        document.getElementById('work-detail-icon').textContent = w.emoji;
+        document.getElementById('work-detail-name').textContent = w.name;
+        document.getElementById('work-detail-time').textContent = w.time;
+
+        // Adjust preview aspect ratio based on type
+        var preview = document.getElementById('work-detail-preview');
+        preview.style.aspectRatio = w.type === 'video' ? '9/16' : '3/4';
+
+        var saveBtn = document.getElementById('work-save-btn');
+        saveBtn.textContent = w.type === 'video' ? '保存到私密视频' : '保存到私密图片';
+
+        openSubPage('work-detail');
+      };
+
+      window.onWorkSave = function() {
+        if (!isVip) {
+          // Show ad to unlock save feature
+          document.getElementById('unlock-tpl-name').textContent = '保存到私密空间';
+          document.getElementById('unlock-watch-text').textContent = '看广告';
+          var btn = document.getElementById('unlock-watch-btn');
+          btn.disabled = false;
+          document.getElementById('unlock-modal').classList.add('show');
+          window.__unlockForFeature = true;
+          window.__startUnlockCountdown();
+        } else {
+          closeSubPage('work-detail');
+          showToast('已保存到私密空间');
+        }
+      };
+
+      window.onWorkDownload = function() {
+        if (!isVip) {
+          // Show ad before download
+          document.getElementById('unlock-tpl-name').textContent = '下载功能';
+          document.getElementById('unlock-watch-text').textContent = '看广告';
+          var btn = document.getElementById('unlock-watch-btn');
+          btn.disabled = false;
+          document.getElementById('unlock-modal').classList.add('show');
+          window.__unlockForFeature = true;
+          window.__startUnlockCountdown();
+        } else {
+          showToast('开始下载...');
+        }
+      };
+
+      // Initial render works
+      renderWorks();
 
       window._tplCardClick = function(tplName) {
         // Find template from both lists
@@ -2198,7 +2437,15 @@
           }
           unlockInList(videoTemplates);
           unlockInList(photoTemplates);
-          renderWaterfall('home-waterfall', videoTemplates.slice(0, 6));
+          (function(){
+            var ht = [];
+            var ml = Math.max(videoTemplates.length, photoTemplates.length);
+            for (var xi = 0; xi < ml; xi++) {
+              if (xi < videoTemplates.length) ht.push(videoTemplates[xi]);
+              if (xi < photoTemplates.length) ht.push(photoTemplates[xi]);
+            }
+            renderWaterfall('home-waterfall', ht.slice(0, 12));
+          })();
           renderWaterfall('video-waterfall', videoTemplates);
           renderWaterfall('photo-waterfall', photoTemplates);
         }
